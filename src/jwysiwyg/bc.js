@@ -26,5 +26,5 @@
 				browser.safari = true;
 			}
 			return browser;
-		}
+		};
 	}
