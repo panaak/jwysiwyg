@@ -233,6 +233,8 @@
       // MS Office 9 has conditional we need to remove
       // <http://stackoverflow.com/questions/5653207/remove-html-comments-with-regex-in-javascript>
       text = text.replace(/<!--[\s\S]*?-->/g, "")
+      // remove start and end fragments
+      text = text.replace('<!--StartFragment-->', '').replace('<!--EndFragment-->', '')
 
 			text = text.replace(/^[\s\n]+/gm, "");
 
