@@ -352,6 +352,15 @@
 				if (this.debug) { console.log("DomTraversing=", traversing); }
 			}
 
+      // wait until paste event triggered new content
+      // <https://code.google.com/p/jwysiwyg/issues/detail?id=210>
+      if (this.options.rules.msWordMarkup.enabled) {
+        var that = this
+        setTimeout(function() {
+          Wysiwyg.setContent(that.msWordMarkup(Wysiwyg.getContent()));
+        }, 100)
+      }
+
 			if (this.options.rules.msWordMarkup.enabled) {
 				Wysiwyg.setContent(this.msWordMarkup(Wysiwyg.getContent()));
 			}
