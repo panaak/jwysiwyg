@@ -139,7 +139,7 @@
 
 			return false;
 		},
-		
+
 		removeStyle: function(node) {
 		  if (this.options.rules.inlineCSS) {
 		    $(node).removeAttr('style');
@@ -155,7 +155,7 @@
 
 			while (el) {
 				if (this.debug) { console.log(cnt, "canRemove=", canRemove); }
-				
+
 				this.removeStyle(el);
 
 				if (el.firstElementChild) {
@@ -230,13 +230,18 @@
 			// ----
 			text = text.replace(/<!--[^>]+>\s*<[^>]+>/gm, ""); // firefox needed this 1
 
-						
+      // MS Office 9 has conditional we need to remove
+      // <http://stackoverflow.com/questions/5653207/remove-html-comments-with-regex-in-javascript>
+      text = text.replace(/<!--[\s\S]*?-->/g, "")
+      // remove start and end fragments
+      text = text.replace('<!--StartFragment-->', '').replace('<!--EndFragment-->', '')
+
 			text = text.replace(/^[\s\n]+/gm, "");
 
 			if (this.options.rules.msWordMarkup.tags) {
 				for (tagName in this.options.rules.msWordMarkup.tags) {
 					rules = this.options.rules.msWordMarkup.tags[tagName];
-					
+
 					if ("string" === typeof (rules)) {
 						if ("" === rules) {
 							reg = new RegExp("<" + tagName + "(?:\\s[^>]+)?/?>", "gmi");
@@ -264,7 +269,7 @@
 
 						if (attrs) {
 							attrs = attrs.replace(/[\s\n]+/gm, " ");
-							
+
 							if (" " === attrs) {
 								attrs = "";
 							}
