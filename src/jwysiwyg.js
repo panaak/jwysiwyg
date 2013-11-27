@@ -1,4 +1,5 @@
 /*jslint browser: true, forin: true, white: true */
+(function(window, document, undefined) {
 
 (function ($) {
 	"use strict";
@@ -47,4 +48,7 @@
 	$.fn.getWysiwyg = function () {
 		return this.data("wysiwyg");
 	};
-})(jQuery);
+
+})(window.jQuery);
+
+})(window, document);

@@ -12,6 +12,7 @@
  *
  */
 /*jslint browser: true, forin: true, white: true */
+(function(window, document, undefined) {
 
 (function ($) {
 	"use strict";
@@ -1010,6 +1011,10 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 		this.getRangeText = function () {
 			var r = this.getInternalRange();
 
+			if (!r) {
+				return r;
+			}
+			
 			if (r.toString) {
 				r = r.toString();
 			} else if (r.text) {	// IE
@@ -2539,4 +2544,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 	$.fn.getWysiwyg = function () {
 		return this.data("wysiwyg");
 	};
-})(jQuery);
+
+})(window.jQuery);
+
+})(window, document);
