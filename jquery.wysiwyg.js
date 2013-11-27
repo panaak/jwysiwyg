@@ -8,26 +8,11 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Release: 2013-05-14
+ * Release: 2013-11-27
  *
  */
 /*jslint browser: true, forin: true, white: true */
 
-(function(window, document, undefined) {
-(function(factory) {
-	"use strict";
-
-	// Define as an AMD module if possible
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	}
-
-	// Define using browser globals otherwise
-	// Prevent multiple instantiations if the script is loaded twice
-	else if (jQuery && !jQuery.fn.wysiwyg) {
-		factory(jQuery);
-	}
-}
 (function ($) {
 	"use strict";
 	/* Wysiwyg namespace: private properties and methods */
@@ -39,6 +24,38 @@
 		}
 	},
 	supportsProp = ($.fn.prop !== undefined) && ($.fn.removeProp !== undefined);
+
+	// $.browser fallback for jQuery 1.9+.
+	if ($.browser === undefined) {
+		$.browser = function () {
+			var ua_match = function (ua) {
+				ua = ua.toLowerCase();
+				var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
+				/(webkit)[ \/]([\w.]+)/.exec(ua) ||
+				/(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
+				/(msie) ([\w.]+)/.exec(ua) ||
+				ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) ||
+				[];
+				
+				return { browser:match[ 1 ] || "", version:match[ 2 ] || "0" };
+			},
+			matched = ua_match(navigator.userAgent),
+			browser = {};
+			
+			if (matched.browser) {
+				browser[ matched.browser ] = true;
+				browser.version = matched.version;
+			}
+			
+			if (browser.chrome) {
+				browser.webkit = true;
+			} else if (browser.webkit) {
+				browser.safari = true;
+			}
+			return browser;
+		};
+	}
+
 
 	function Wysiwyg() {
 		// - the item is added by this.ui.appendControls and then appendItem
@@ -560,7 +577,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					rmMsWordMarkup: false
 				}
 			},
-			
+
 			dialog : "default"
 		};
 
@@ -613,7 +630,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 
 		this.dom.getAncestor = function (element, filterTagName) {
 			filterTagName = filterTagName.toLowerCase();
-			
+
 			while (element && element.tagName !== undefined && "body" !== element.tagName.toLowerCase()) {
 				if (filterTagName === element.tagName.toLowerCase()) {
 					return element;
@@ -626,12 +643,12 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					if(element.previousSibling.tagName.toLowerCase() === filterTagName) {
 						return element.previousSibling;
 					}
-				}	
+				}
 				if(element.nextSibling) {
 					if(element.nextSibling.tagName.toLowerCase() === filterTagName) {
 						return element.nextSibling;
 					}
-				}	
+				}
 			}
 
 			return null;
@@ -639,7 +656,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 
 		this.dom.getElement = function (filterTagName) {
 			var dom = this;
-			filterTagName = filterTagName.toLowerCase();			
+			filterTagName = filterTagName.toLowerCase();
 			return window.getSelection ? dom.w3c.getElement(filterTagName) : dom.ie.getElement(filterTagName);
 		};
 
@@ -668,7 +685,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			var dom		= this.parent,
 				range	= dom.parent.getInternalRange(),
 				element;
-				
+
 			if (!range) {
 				return null;
 			}
@@ -685,18 +702,18 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			if (element === range.startContainer) {
 				element = element.childNodes[range.startOffset];
 			}
-			
+
 			if(!element.tagName && (element.previousSibling || element.nextSibling)) {
 				if(element.previousSibling) {
 					if(element.previousSibling.tagName.toLowerCase() === filterTagName) {
 						return element.previousSibling;
 					}
-				}	
+				}
 				if(element.nextSibling) {
 					if(element.nextSibling.tagName.toLowerCase() === filterTagName) {
 						return element.nextSibling;
 					}
-				}	
+				}
 			}
 
 			return dom.getAncestor(element, filterTagName);
@@ -759,7 +776,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 				if ( (typeof a === "number" ) && (typeof b === "number") ) {
 					return (a - b);
 				}
-				
+
 				a = a.toString();
 				b = b.toString();
 
@@ -811,7 +828,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 							break;
 						}
 					}
-                    
+
 					this.blur();
 					self.ui.returnRange();
 					self.ui.focus();
@@ -978,7 +995,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			for (i = 0; i < this.timers.length; i += 1) {
 				window.clearTimeout(this.timers[i]);
 			}
-			
+
 			// Move textarea back to its original position
 			$(this.original).appendTo($(this.element.parent()));
 
@@ -992,13 +1009,11 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 
 		this.getRangeText = function () {
 			var r = this.getInternalRange();
-			
-			if(r){
-				if (r.toString) {
-					r = r.toString();
-				} else if (r.text) {	// IE
-					r = r.text;
-				}
+
+			if (r.toString) {
+				r = r.toString();
+			} else if (r.text) {	// IE
+				r = r.text;
 			}
 
 			return r;
@@ -1110,10 +1125,10 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					var text = Range.commonAncestorContainer.nodeValue.toString(),
 						start = text.lastIndexOf(" ", Range.startOffset) + 1,
 						end = (-1 === text.indexOf(" ", Range.startOffset)) ? text : text.indexOf(" ", Range.startOffset);
-	
+
 					Range.setStart(Range.commonAncestorContainer, start);
 					Range.setEnd(Range.commonAncestorContainer, end);
-	
+
 					Range.surroundContents(newNode);
 					Selection.addRange(Range);
 				} else {
@@ -1132,21 +1147,21 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			}
 			return this.events.filter('getContent', this.editorDoc.body.innerHTML);
 		};
-		
+
 		/**
 		 * A jWysiwyg specific event system.
 		 *
 		 * Example:
-		 * 
+		 *
 		 * $("#editor").getWysiwyg().events.bind("getContent", function (orig) {
 		 *     return "<div id='content'>"+orgi+"</div>";
 		 * });
-		 * 
+		 *
 		 * This makes it so that when ever getContent is called, it is wrapped in a div#content.
 		 */
 		this.events = {
 			_events : {},
-			
+
 			/**
 			 * Similar to jQuery's bind, but for jWysiwyg only.
 			 */
@@ -1156,7 +1171,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 				}
 				this._events[eventName].push(callback);
 			},
-			
+
 			/**
 			 * Similar to jQuery's trigger, but for jWysiwyg only.
 			 */
@@ -1170,7 +1185,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					});
 				}
 			},
-			
+
 			/**
 			 * This "filters" `originalText` by passing it as the first argument to every callback
 			 * with the name `eventName` and taking the return value and passing it to the next function.
@@ -1191,8 +1206,8 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 				return originalText;
 			}
 		};
-		
-		
+
+
 		this.getElementByAttributeValue = function (tagName, attributeName, attributeValue) {
 			var i, value, elements = this.editorDoc.getElementsByTagName(tagName);
 
@@ -1320,8 +1335,8 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					this.editor.css("height", newY.toString() + "px");
 				}
 			}
-			/** 
-			 * Automagically add id to iframe if textarea has its own when possible 
+			/**
+			 * Automagically add id to iframe if textarea has its own when possible
 			 * ( http://github.com/akzhan/jwysiwyg/issues/245 )
 			 */
 			if (element.id) {
@@ -1404,7 +1419,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			$(self.editorDoc).bind("click.wysiwyg", function (event) {
 				self.ui.checkTargets(event.target ? event.target : event.srcElement);
 			});
-            
+
 			/**
 			 * @link http://code.google.com/p/jwysiwyg/issues/detail?id=20
 			 * @link https://github.com/akzhan/jwysiwyg/issues/330
@@ -1415,9 +1430,9 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 				}
 				self.ui.focus();
 			});
-			
+
 			$($.wysiwyg.quirk.quirks).each(function(i, quirk) { quirk.init(self); });
-			
+
 			$(self.editorDoc).keydown(function (event) {
 				var emptyContentRegex;
 				if (event.keyCode === 8) { // backspace
@@ -1427,11 +1442,11 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 						return false;
 					}
 				}
-                
+
                 self.editorDoc.rememberCommand = false;
 				return true;
 			});
-			
+
 			if (!$.browser.msie) {
 				$(self.editorDoc).keydown(function (event) {
 					var controlName;
@@ -1452,12 +1467,12 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					}
 					return true;
 				});
-			} 
-			
+			}
+
 			if (self.options.brIE) {
 				$(self.editorDoc).keydown(function (event) {
 					if (event.keyCode === 13) {
-						
+
 						if ($.browser.msie || $.browser.opera) {
 							var rng = self.getRange();
 							if (rng) {
@@ -1466,13 +1481,13 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 								rng.select();
 							} else {
 								self.insertHtml('<br/>');
-							}						
+							}
 						} else {
 							var selection = self.editorDoc.getSelection();
 							if (selection && selection.getRangeAt && selection.rangeCount) {
 								var range = selection.getRangeAt(0);
 								if (!range) return true;
-								
+
 								// Replace selected content by a newline
 								var newlineEl = document.createElement('br');
 								range.deleteContents();
@@ -1496,19 +1511,14 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			}
 
 			if (self.options.plugins.rmFormat.rmMsWordMarkup) {
-				$(self.editorDoc).bind("keyup.wysiwyg", function (event) {
-					if (event.ctrlKey || event.metaKey) {
-						// CTRL + V (paste)
-						if (86 === event.keyCode) {
-							if ($.wysiwyg.rmFormat) {
-								if ("object" === typeof (self.options.plugins.rmFormat.rmMsWordMarkup)) {
-									$.wysiwyg.rmFormat.run(self, {rules: { msWordMarkup: self.options.plugins.rmFormat.rmMsWordMarkup }});
-								} else {
-									$.wysiwyg.rmFormat.run(self, {rules: { msWordMarkup: { enabled: true }}});
-								}
-							}
-						}
-					}
+				$(self.editorDoc).bind("paste.wysiwyg", function (event) {
+          if ($.wysiwyg.rmFormat) {
+            if ("object" === typeof (self.options.plugins.rmFormat.rmMsWordMarkup)) {
+              $.wysiwyg.rmFormat.run(self, {rules: { msWordMarkup: self.options.plugins.rmFormat.rmMsWordMarkup }});
+            } else {
+              $.wysiwyg.rmFormat.run(self, {rules: { msWordMarkup: { enabled: true }}});
+            }
+          }
 				});
 			}
 
@@ -1577,11 +1587,11 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					}
 				});
 			}
-			
+
 			// Support event callbacks
 			$.each(self.options.events, function (key, handler) {
 				$(self.editorDoc).bind(key + ".wysiwyg", function (event) {
-					// Trigger event handler, providing the event and api to 
+					// Trigger event handler, providing the event and api to
 					// support additional functionality.
 					handler.apply(self.editorDoc, [event, self]);
 				});
@@ -1615,7 +1625,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					$(self.editorDoc).bind("cut.wysiwyg", saveHandler);
 				}
 			}
-			
+
 			/**
 			 * XHTML5 {@link https://github.com/akzhan/jwysiwyg/issues/152}
 			 */
@@ -1629,7 +1639,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 								p1 = "__replacement";
 							}
 						}
-						
+
 						var num = replacements[p1];
 						/* Numeric return if ever wanted: return replacements[p1] ? "&#"+num+";" : ""; */
 						return String.fromCharCode(num);
@@ -1697,7 +1707,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			}
 
 			this.saveContent();
-			
+
 			return this;
 		};
 
@@ -1784,7 +1794,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 							element.replaceWith(p);
 						}
 					});
-					
+
 					content = newContent.html();
 				}
 
@@ -2506,37 +2516,6 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 	// end Dialog
 
 
-	// $.browser fallback for jQuery 1.9+.
-	if ($.browser === undefined) {
-		jQuery.browser = function () {
-			var ua_match = function (ua) {
-				ua = ua.toLowerCase();
-				var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
-				/(webkit)[ \/]([\w.]+)/.exec(ua) ||
-				/(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
-				/(msie) ([\w.]+)/.exec(ua) ||
-				ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) ||
-				[];
-				
-				return { browser:match[ 1 ] || "", version:match[ 2 ] || "0" };
-			},
-			matched = ua_match(navigator.userAgent),
-			browser = {};
-			
-			if (matched.browser) {
-				browser[ matched.browser ] = true;
-				browser.version = matched.version;
-			}
-			
-			if (browser.chrome) {
-				browser.webkit = true;
-			} else if (browser.webkit) {
-				browser.safari = true;
-			}
-			return browser;
-		};
-	}
-
 
 	$.fn.wysiwyg = function (method) {
 		var args = arguments, plugin;
@@ -2560,5 +2539,4 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 	$.fn.getWysiwyg = function () {
 		return this.data("wysiwyg");
 	};
-}));
-}(window, document));
+})(jQuery);

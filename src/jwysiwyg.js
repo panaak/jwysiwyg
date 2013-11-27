@@ -12,6 +12,8 @@
 	},
 	supportsProp = ($.fn.prop !== undefined) && ($.fn.removeProp !== undefined);
 
+	//= include "jwysiwyg/bc.js"
+
 	//= include "jwysiwyg/private.js"
 
 	/*
@@ -22,7 +24,6 @@
 
 	//= include "jwysiwyg/dialog.js"
 
-	//= include "jwysiwyg/bc.js"
 
 	$.fn.wysiwyg = function (method) {
 		var args = arguments, plugin;
