@@ -52,6 +52,9 @@
 			}
 			var self = this, elements, dialog, colorpickerHtml, dialogReplacements, key, translation;
 
+            		var initialContentPalettes = Wysiwyg.getContent().match(/#[0-9a-f]{6}|#[0-9a-f]{3}/gi) || [];
+            		for (var i = 0; i < initialContentPalettes.length; i++) { self.addColorToPalette("fore", initialContentPalettes[i]); }
+            
 			dialogReplacements = {
 				legend: "Colorpicker",
 				color: "Color",
