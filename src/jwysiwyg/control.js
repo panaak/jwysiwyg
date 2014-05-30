@@ -39,7 +39,7 @@
 				tags: ["a"],
 				tooltip: "Create link"
 			},
-			
+
 			unLink : {
 				groupIndex: 6,
 				visible: true,
@@ -69,8 +69,8 @@
 				groupIndex: 7,
 				visible: true,
 				className: "h1",
-				command: ($.browser.msie || $.browser.opera) ? "FormatBlock" : "heading",
-				"arguments": ($.browser.msie || $.browser.opera) ? "<h1>" : "h1",
+				command: $.browser.mozilla ? "heading" : "FormatBlock",
+				"arguments": $.browser.mozilla ? "h1" : "<h1>",
 				tags: ["h1"],
 				tooltip: "Header 1"
 			},
@@ -79,8 +79,8 @@
 				groupIndex: 7,
 				visible: true,
 				className: "h2",
-				command: ($.browser.msie || $.browser.opera)	? "FormatBlock" : "heading",
-				"arguments": ($.browser.msie || $.browser.opera) ? "<h2>" : "h2",
+				command: $.browser.mozilla ? "heading" : "FormatBlock",
+				"arguments": $.browser.mozilla ? "h2" : "<h2>",
 				tags: ["h2"],
 				tooltip: "Header 2"
 			},
@@ -89,8 +89,8 @@
 				groupIndex: 7,
 				visible: true,
 				className: "h3",
-				command: ($.browser.msie || $.browser.opera) ? "FormatBlock" : "heading",
-				"arguments": ($.browser.msie || $.browser.opera) ? "<h3>" : "h3",
+				command: $.browser.mozilla ? "heading" : "FormatBlock",
+				"arguments": $.browser.mozilla ? "h3" : "<h3>",
 				tags: ["h3"],
 				tooltip: "Header 3"
 			},
@@ -163,7 +163,7 @@
 								alsoResize: this.editor
 							}, this.options.resizeOptions));
 						}
-						
+
 						this.ui.toolbar.find("li").each(function () {
 							var li = $(this);
 
@@ -182,7 +182,7 @@
 							resize: "none"
 						}).show();
 						this.editor.hide();
-						
+
 						if (this.options.resizeOptions && $.fn.resizable) {
 							// if element.height still the same after frame was hidden
 							if (elementHeight === this.element.height()) {
@@ -462,14 +462,14 @@
 					}
 				}
 			},
-			
+
 			cssWrap: {
 				visible : false,
 				groupIndex: 6,
 				tooltip: "CSS Wrapper",
-				exec: function () { 
+				exec: function () {
 					$.wysiwyg.controls.cssWrap.init(this);
 				}
 			}
-			
+
 		};
