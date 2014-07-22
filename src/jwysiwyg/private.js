@@ -168,6 +168,9 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			if (element === range.startContainer) {
 				element = element.childNodes[range.startOffset];
 			}
+			if (!element) {
+				return null;
+			}
 
 			if(!element.tagName && (element.previousSibling || element.nextSibling)) {
 				if(element.previousSibling) {
