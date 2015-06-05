@@ -242,8 +242,9 @@
 				if (this.options.draggable) { 
 					
 					var mouseDown = false;
+					var $dialog_topbar = that._$dialog.find("div.wysiwyg-dialog-topbar");
 					
-					that._$dialog.find("div.wysiwyg-dialog-topbar").bind("mousedown", function (e) {
+					$dialog_topbar.bind("mousedown", function (e) {
 						e.preventDefault();
 						$(this).css({ "cursor": "move" });
 						var $topbar = $(this),
@@ -253,7 +254,7 @@
 						mouseDown = true;
 						$(this).css({ "cursor": "move" });
 						
-						$(document).bind("mousemove", function (e) {
+						$dialog_topbar.bind("mousemove", function (e) {
 							e.preventDefault();
 							if (mouseDown) {
 								_dialog.css({
@@ -265,7 +266,7 @@
 							e.preventDefault();
 							mouseDown = false;
 							$topbar.css({ "cursor": "auto" });
-							$(document).unbind("mousemove").unbind("mouseup");
+							$dialog_topbar.unbind("mousemove").unbind("mouseup");
 						});
 					
 					});
