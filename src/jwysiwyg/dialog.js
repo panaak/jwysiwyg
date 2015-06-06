@@ -157,7 +157,8 @@
 						modal: this.options.modal,
 						draggable: this.options.draggable,
 						height: dialogHeight,
-						width: dialogWidth
+						width: dialogWidth,
+						close: that.destroy
 					});
 
 					return that._$dialog;
@@ -174,7 +175,11 @@
 				};
 
 				this.destroy = function() {
-					that._$dialog.dialog("destroy");
+					try{
+						that._$dialog.dialog("destroy").remove();
+					}catch(e){
+						//console.error(e);			//Close button may cause destroy error
+					}
 					return that._$dialog;
 				};
 			});
