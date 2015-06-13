@@ -14,7 +14,7 @@
 	    throw "lang.tr.js, $.wysiwyg.i18n olmadan çalışamaz";
 	}
 
-	$.wysiwyg.i18n.lang.de = {
+	$.wysiwyg.i18n.lang.tr = {
 		controls: {
 			"Bold": "Kalın",
 			"Colorpicker": "Renk Seçimi",
@@ -61,7 +61,27 @@
 				"Colorpicker": "Renk Seç",
 				"Color": "Renk"
 			},
-
+			fileManager: {
+				"file_manager": 		"Dosya Yöneticisi",
+				"upload_title":			"Dosya Yükle",
+				"rename_title":			"Yeniden Adlandır",
+				"remove_title":			"Kaldır",
+				"mkdir_title":			"Klasör Oluştur",
+				"upload_action": 		"Yeni dosya yükle",
+				"mkdir_action": 		"Yeni klasör oluştur",
+				"remove_action": 		"Bu dosyayı kaldır",
+				"rename_action": 		"Yeniden adlandır" ,	
+				"delete_message": 		"Bu dosyayı silmek istediğinizi emin misiniz?",
+				"new_directory": 		"Yeni klasör",
+				"previous_directory": 	"Önceki klasöre git",
+				"rename":				"Yeniden adlandır",
+				"select": 				"Seç",
+				"create": 				"Oluştur",
+				"submit": 				"Kaydet",
+				"cancel": 				"Vazgeç",
+				"yes":					"Evet",
+				"no":					"Hayır"
+			},
 			image: {
 				"Insert Image": "Resim Ekle",
 				"Preview": "Önizleme",
