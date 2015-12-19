@@ -92,10 +92,7 @@
 							rmWhenEmpty: true
 						},
 
-						"span": {
-							rmAttr: {
-								lang: ""
-							},
+						"span": rmAttr: "all",
 							rmWhenEmpty: true,
 							rmWhenNoAttr: true
 						},
